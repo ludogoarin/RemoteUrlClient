@@ -24,13 +24,15 @@ namespace RemoteUrl
         public string GetSource(string url)
         {
             String source;
-            WebResponse objResponse;
-            WebRequest objRequest = HttpWebRequest.Create(url);
-            objResponse = objRequest.GetResponse();
-            using (StreamReader sr = new StreamReader(objResponse.GetResponseStream()))
+            HttpWebResponse webResponse;
+            HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(url);
+            webRequest.UserAgent = new UserAgent().Chrome_30;
+            webResponse = (HttpWebResponse)webRequest.GetResponse();
+            using (StreamReader sr = new StreamReader(webResponse.GetResponseStream()))
             {
                 source = sr.ReadToEnd();
                 sr.Close();
+                webResponse.Close();
             }
 
             // set object source
@@ -83,7 +85,10 @@ namespace RemoteUrl
 
             foreach (Match zoneMatch in zoneSrc_matches)
             {
-                if ((zoneMatch.Value.IndexOf("http://") < 0) && (zoneMatch.Value.IndexOf("https://") < 0))
+                if ((zoneMatch.Value.IndexOf("url(//") != 0) &&
+                    (zoneMatch.Value.IndexOf("url(\"//") != 0) && 
+                    (zoneMatch.Value.IndexOf("http://") < 0) && 
+                    (zoneMatch.Value.IndexOf("https://") < 0))
                 {
                     // get updated code
                     string zoneUpdate = zoneMatch.Value.
@@ -172,10 +177,14 @@ namespace RemoteUrl
 
             foreach (Match zoneMatch in zoneCssBgImgTags_matches)
             {
-                if ((zoneMatch.Value.IndexOf("http://") < 0) && (zoneMatch.Value.IndexOf("https://") < 0))
+                if ((zoneMatch.Value.IndexOf("url(//") != 0) && 
+                    (zoneMatch.Value.IndexOf("url(\"//") != 0) && 
+                    (zoneMatch.Value.IndexOf("http://") < 0) && 
+                    (zoneMatch.Value.IndexOf("https://") < 0))
                 {
                     // get updated code
                     string zoneUpdate = zoneMatch.Value.
+                        Replace("url(\"", "url(\"" + siteRoot).
                         Replace("url(", "url(" + siteRoot);
 
                     // update layoutInput

@@ -12,20 +12,9 @@ namespace RemoteUrlClient.Controllers
         //
         // GET: /root/
 
-        public ActionResult Index(string url)
+        public ActionResult Index()
         {
-            if (!String.IsNullOrEmpty(url))
-            {
-                var remoteUrl = new WebPage { Url = url };
-                remoteUrl.GetSource();
-                remoteUrl.UpdateSource();
-
-                return View(remoteUrl);
-            }
-            else
-            {
-                return View(new WebPage());
-            }
+            return View();
         }
 
         public JsonResult Preview(string url)

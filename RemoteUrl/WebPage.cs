@@ -49,17 +49,36 @@ namespace RemoteUrl
         {
             string output = sourceInput;
 
+            // HTTP:// ?
+            bool isHttpThere = url.IndexOf("http://") > -1;
+            if (!isHttpThere)
+            {
+                url = "http://" + url;
+            }
+
+            var remoteUri = new Uri(url);
+
+            // update remote html
+            string siteRoot = "http://" + remoteUri.Authority + "/";
+            string lastUrlSegment = remoteUri.Segments.Last();
+            string directoryName = System.IO.Path.GetDirectoryName(remoteUri.AbsolutePath);
+
+            if (!String.IsNullOrEmpty(directoryName))
+            {
+                siteRoot += (directoryName.Replace("\\", "/") + "/").TrimStart('/');
+            }
+
             // replace all absolute paths
             output = output.
                 Replace("href=\"../", "href=\"/").
                 Replace("src=\"../", "src=\"/").
-                Replace("href=\"/", "href=\"" + url).
-                Replace("value=\"../", "value=\"" + url).
-                Replace("value=\"/", "value=\"" + url).
-                Replace("'movie','../", "'movie','" + url).
-                Replace("'movie','/", "'movie','" + url).
-                Replace("src=\"/", "src=\"" + url).
-                Replace("'/", "'" + url);
+                Replace("href=\"/", "href=\"" + siteRoot).
+                Replace("value=\"../", "value=\"" + siteRoot).
+                Replace("value=\"/", "value=\"" + siteRoot).
+                Replace("'movie','../", "'movie','" + siteRoot).
+                Replace("'movie','/", "'movie','" + siteRoot).
+                Replace("src=\"/", "src=\"" + siteRoot).
+                Replace("'/", "'" + siteRoot);
 
             Regex zoneSrc_regex = new Regex("src=(\"|')((.|\n)*?)(\"|')", RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
             MatchCollection zoneSrc_matches = zoneSrc_regex.Matches(output);
@@ -70,10 +89,10 @@ namespace RemoteUrl
                 {
                     // get updated code
                     string zoneUpdate = zoneMatch.Value.
-                        Replace("src=\"", "src=\"" + url).
-                        Replace("src='", "src='" + url).
-                        Replace("src=\"/", "src=\"" + url).
-                        Replace("src='/", "src='" + url);
+                        Replace("src=\"", "src=\"" + siteRoot).
+                        Replace("src='", "src='" + siteRoot).
+                        Replace("src=\"/", "src=\"" + siteRoot).
+                        Replace("src='/", "src='" + siteRoot);
 
                     // update layoutInput
                     output = output.Replace(zoneMatch.Value, zoneUpdate);
@@ -89,10 +108,10 @@ namespace RemoteUrl
                 {
                     // get updated code
                     string zoneUpdate = zoneMatch.Value.
-                        Replace("href=\"", "href=\"" + url).
-                        Replace("href='", "href='" + url).
-                        Replace("href=\"/", "href=\"" + url).
-                        Replace("href='/", "href='" + url);
+                        Replace("href=\"", "href=\"" + siteRoot).
+                        Replace("href='", "href='" + siteRoot).
+                        Replace("href=\"/", "href=\"" + siteRoot).
+                        Replace("href='/", "href='" + siteRoot);
 
                     // update layoutInput
                     output = output.Replace(zoneMatch.Value, zoneUpdate);
@@ -109,7 +128,7 @@ namespace RemoteUrl
                 string zoneUpdate = zoneMatch.Value.
                     Replace("data=\"../", "data=\"/").
                     Replace("value=\"../", "value=\"/").
-                    Replace("movie\" value=\"", "param name=\"movie\" value=\"" + url).
+                    Replace("movie\" value=\"", "param name=\"movie\" value=\"" + siteRoot).
                     Replace("data=\"", "data=\"" + url);
 
                 // update layoutInput
@@ -124,7 +143,7 @@ namespace RemoteUrl
             {
                 // get updated code
                 string nestedZoneUpdate = zoneMatch.Value.
-                    Replace("name=\"movie\" value=\"", "name=\"movie\" value=\"" + url); ;
+                    Replace("name=\"movie\" value=\"", "name=\"movie\" value=\"" + siteRoot); ;
 
                 // update layoutInput
                 output = output.Replace(zoneMatch.Value, nestedZoneUpdate);
@@ -140,9 +159,9 @@ namespace RemoteUrl
                 {
                     // get updated code
                     string zoneUpdate = zoneMatch.Value.
-                        Replace("background=\"", "background=\"" + url).
-                        Replace("background=\"/", "background=\"" + url).
-                        Replace("background='/", "background='" + url);
+                        Replace("background=\"", "background=\"" + siteRoot).
+                        Replace("background=\"/", "background=\"" + siteRoot).
+                        Replace("background='/", "background='" + siteRoot);
 
                     // update layoutInput
                     output = output.Replace(zoneMatch.Value, zoneUpdate);
@@ -159,7 +178,7 @@ namespace RemoteUrl
                 {
                     // get updated code
                     string zoneUpdate = zoneMatch.Value.
-                        Replace("url(", "url(" + url);
+                        Replace("url(", "url(" + siteRoot);
 
                     // update layoutInput
                     output = output.Replace(zoneMatch.Value, zoneUpdate);

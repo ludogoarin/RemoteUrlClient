@@ -17,7 +17,23 @@ namespace RemoteUrlClient.Controllers
             return View();
         }
 
-        public JsonResult Preview(string url)
+        public ActionResult Preview(string url)
+        {
+            if (!String.IsNullOrEmpty(url))
+            {
+                var remoteUrl = new WebPage { Url = url };
+                remoteUrl.GetSource();
+                remoteUrl.UpdateSource();
+
+                return View(remoteUrl);
+            }
+            else
+            {
+                return View(new WebPage());
+            }
+        }
+
+        public JsonResult Remotecode(string url)
         {
             if (!String.IsNullOrEmpty(url))
             {

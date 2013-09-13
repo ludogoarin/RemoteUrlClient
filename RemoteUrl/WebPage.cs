@@ -62,16 +62,14 @@ namespace RemoteUrl
             string siteRoot = "http://" + remoteUri.Authority + "/";
             string lastUrlSegment = remoteUri.Segments.Last();
             string directoryName = System.IO.Path.GetDirectoryName(remoteUri.AbsolutePath);
-
-            if (!String.IsNullOrEmpty(directoryName))
-            {
-                siteRoot += (directoryName.Replace("\\", "/") + "/").TrimStart('/');
-            }
+            string siteDirectoryPath = !String.IsNullOrEmpty(directoryName) ? (directoryName.Replace("\\", "/") + "/").TrimStart('/') : "";
 
             // replace all absolute paths
             output = output.
                 Replace("href=\"../", "href=\"/").
                 Replace("src=\"../", "src=\"/").
+                Replace("src=\"//", "src=\"http://").
+                Replace("href=\"//", "href=\"http://").
                 Replace("href=\"/", "href=\"" + siteRoot).
                 Replace("value=\"../", "value=\"" + siteRoot).
                 Replace("value=\"/", "value=\"" + siteRoot).

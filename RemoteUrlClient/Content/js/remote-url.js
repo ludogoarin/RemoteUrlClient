@@ -2,8 +2,13 @@
     init: function () {
         $("#remoteSource").html("No HTML retrieved yet.");
     },
+    url: '',
     loadUrl: function (url) {
+        this.url = url;
         var $resBlock = $("#remoteSource");
+        var $previewContainer = $("#previewContainer");
+        $previewContainer.html('');
+        $previewContainer.append('<iframe src="about:blank" id="ifPreview"></iframe>');
         var $preview = $('#ifPreview');
         var $alerts = $("#alertContainer");
 
@@ -13,7 +18,7 @@
         $preview.contents().find('html').html('');
         $resBlock.html('');
 
-        $.post('/root/preview', { url: url }, function (data) {
+        $.post('/root/remotecode', { url: url }, function (data) {
             $resBlock.text(data.Source);
             try {
                 $preview.contents().find('html').html(data.UpdatedSource);
@@ -25,6 +30,7 @@
 		    $alerts.prepend('<div class="alert alert-success alert-dismissable">' +
 				'<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
 				'Successfully retrieved HTML from URL:<br>' + url + '</div>');
+		    $("#btn_openNewWindow").show();
 		})
 		.fail(function (jqXHR, textStatus, errorThrown) {
 		    $alerts.prepend('<div class="alert alert-warning alert-dismissable">' +
@@ -50,6 +56,7 @@ $(function () {
     clientParser.init();
 
     $("#btGetUrl").on("click", function () {
+        $("#btn_openNewWindow").hide();
         var url = $("#tiRemoteUrl").val();
         console.log(url.length);
         console.log(url.length > 0);
@@ -64,6 +71,10 @@ $(function () {
 
     $("#tiRemoteUrl").on("focus", function () {
         $(this).val('');
+    });
+
+    $("#btn_openNewWindow").on("click", function () {
+        window.open("/root/preview?url=" + clientParser.url, "_blank");
     });
 
 })

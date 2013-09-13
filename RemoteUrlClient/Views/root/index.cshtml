@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "Remote Url Client";
+}
+
+@section scripts{
+    <script src="/content/js/remote-url.js"></script>
+}
+
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Remote Source</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="javascript:window.location.reload()">Reload</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="starter-template">
+        <h1>Get Source from remote URL</h1>
+        <form role="form">
+		  <div class="form-group">
+		    <input type="url" class="form-control" id="tiRemoteUrl" placeholder="Enter remote URL">
+		  </div>
+		 <button type="submit" id="btGetUrl" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+
+      <div class="container">
+		<div id="alertContainer"></div>
+            <h3>Code</h3>
+	      <pre id="remoteSource"></pre>
+      </div>
+
+        
+      <div class="container">
+          <h3>Preview</h3>
+        <iframe src="about:blank" id="ifPreview"></iframe>
+      </div>
+
+    </div><!-- /.container -->
+

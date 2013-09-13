@@ -1,0 +1,7 @@
+*.dll
+RemoteUrl/bin/Debug/
+RemoteUrl/obj/Debug/
+RemoteUrlClient/bin/
+RemoteUrlClient/obj/Debug/DesignTimeResolveAssemblyReferences.cache
+RemoteUrlClient/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+RemoteUrlClient/obj/

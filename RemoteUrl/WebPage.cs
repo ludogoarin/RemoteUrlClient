@@ -73,12 +73,13 @@ namespace RemoteUrl
                 Replace("src=\"//", "src=\"http://").
                 Replace("href=\"//", "href=\"http://").
                 Replace("href=\"/", "href=\"" + siteRoot).
+                Replace("href=\\\"/", "href=\\\"" + siteRoot). // JS code
                 Replace("value=\"../", "value=\"" + siteRoot).
                 Replace("value=\"/", "value=\"" + siteRoot).
                 Replace("'movie','../", "'movie','" + siteRoot).
                 Replace("'movie','/", "'movie','" + siteRoot).
                 Replace("src=\"/", "src=\"" + siteRoot).
-                Replace("'/", "'" + siteRoot);
+                Replace("src=\\\"/", "src=\\\"" + siteRoot); // JS code
 
             Regex zoneSrc_regex = new Regex("src=(\"|')((.|\n)*?)(\"|')", RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
             MatchCollection zoneSrc_matches = zoneSrc_regex.Matches(output);
